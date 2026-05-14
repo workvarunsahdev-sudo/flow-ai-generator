@@ -24,22 +24,25 @@ User Context:
 - Role: ${role}
 - Goal/Task: ${goal}
 
-Requirements:
-1. Provide a title for the workflow.
-2. Outline 2 to 4 actionable steps to accomplish this goal using AI tools (e.g., ChatGPT, Claude, Canva, Gamma).
-3. For each step, include:
-   - The Step Name.
-   - The Recommended AI Tool.
-   - A precise, ready-to-copy Prompt formatted in a Markdown code block.
-   - The expected output.
-4. Keep the text concise, professional, and visually easy to read (use headings, bold text, and bullet points).
-5. At the end, state the "Estimated Time Saved".
-
-Format exactly using Markdown. Do not include introductory fluff.
+You MUST return ONLY a JSON object exactly matching this structure (no markdown, no backticks, no other text):
+{
+  "title": "Title of the workflow",
+  "steps": [
+    {
+      "title": "Step Name",
+      "time": "15 min",
+      "desc": "A brief, professional explanation of what we are doing in this step.",
+      "tool": "Name of AI Tool (e.g. ChatGPT, Claude, Canva)",
+      "output": "What the user gets (e.g. A 500-word draft)",
+      "prompt": "The precise, ready-to-copy prompt here. No markdown code blocks inside this string."
+    }
+  ]
+}
+Outline 3 to 5 actionable steps. Ensure the JSON is valid and parsable.
 `;
 
     // 3. Call the Google Gemini API directly from the server securely
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -60,10 +63,15 @@ Format exactly using Markdown. Do not include introductory fluff.
     }
 
     const data = await response.json();
-    const resultText = data.candidates[0].content.parts[0].text;
+    let resultText = data.candidates[0].content.parts[0].text;
+    
+    // Clean markdown block if Gemini included it
+    resultText = resultText.replace(/^```json/g, '').replace(/^```/g, '').replace(/```$/g, '').trim();
+    
+    const parsedJson = JSON.parse(resultText);
 
     // 4. Send the successful result back to the frontend
-    return res.status(200).json({ result: resultText });
+    return res.status(200).json({ result: parsedJson });
 
   } catch (error) {
     console.error('Error generating workflow:', error);

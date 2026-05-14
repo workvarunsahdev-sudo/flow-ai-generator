@@ -1,89 +1,1707 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlowAI - Premium AI Workflow Generator</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Marked.js for Markdown parsing -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Flowcraft — AI workflows for your daily work</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #f5f5f7;
+  --bg-tint: #e8e8ed;
+  --paper: #ffffff;
+  --ink: #000000;
+  --ink-2: #1d1d1f;
+  --muted: #86868b;
+  --line: #e5e5ea;
+  --line-soft: #f5f5f7;
+  --forest: #000000;
+  --forest-2: #1d1d1f;
+  --amber: #000000;
+  --amber-soft: #e5e5ea;
+  --moss: #000000;
+  --rose: #000000;
+  --r-sm: 6px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-xl: 16px;
+  --shadow-soft: 0 20px 40px -15px rgba(0, 0, 0, 0.05);
+  --shadow-card: 0 4px 14px rgba(0, 0, 0, 0.02), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  --transition: 0.32s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.serif { font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; font-weight: 600; letter-spacing: -0.03em; }
+.serif-i { font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; font-weight: 600; letter-spacing: -0.03em; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+
+.container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 32px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ---------- NAV ---------- */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background: rgba(246, 243, 236, 0.78);
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--transition);
+}
+nav.scrolled { border-bottom-color: var(--line); }
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 32px;
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 19px;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-decoration: none;
+}
+.logo-mark {
+  width: 28px;
+  height: 28px;
+  background: var(--forest);
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 19px;
+  line-height: 1;
+}
+.logo-name { font-weight: 500; }
+.logo-name em { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; color: var(--forest); }
+
+.nav-links {
+  display: flex;
+  gap: 36px;
+  align-items: center;
+}
+.nav-links a {
+  color: var(--ink-2);
+  text-decoration: none;
+  font-size: 14.5px;
+  font-weight: 400;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--ink); }
+
+.btn {
+  font-family: inherit;
+  border: none;
+  cursor: pointer;
+  font-size: 14.5px;
+  font-weight: 500;
+  padding: 11px 20px;
+  border-radius: 999px;
+  transition: all var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+.btn-primary {
+  background: var(--forest);
+  color: #ffffff;
+  box-shadow: var(--shadow-soft);
+}
+.btn-primary:hover {
+  background: var(--forest-2);
+  transform: translateY(-1px);
+  box-shadow: 0 1px 2px rgba(26,26,23,0.06), 0 12px 28px -10px rgba(31,68,56,0.35);
+}
+.btn-secondary {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+.btn-secondary:hover { border-color: var(--ink); background: var(--paper); }
+.btn-ghost { background: transparent; color: var(--ink-2); padding: 8px 14px; }
+.btn-ghost:hover { color: var(--ink); }
+
+.btn-lg { padding: 14px 26px; font-size: 15.5px; }
+
+@media (max-width: 780px) {
+  .nav-links { display: none; }
+  .nav-inner { padding: 14px 20px; }
+}
+
+/* ---------- HERO ---------- */
+.hero {
+  padding: 80px 0 60px;
+  position: relative;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  font-size: 13px;
+  color: var(--ink-2);
+  margin-bottom: 32px;
+  letter-spacing: 0.01em;
+}
+.hero-eyebrow-dot {
+  width: 22px; height: 22px;
+  background: var(--amber-soft);
+  color: var(--amber);
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 12px;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 72px;
+  align-items: center;
+}
+
+.hero h1 {
+  font-family: 'Instrument Serif', serif;
+  font-weight: 400;
+  font-size: clamp(48px, 6.6vw, 88px);
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin-bottom: 28px;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--forest);
+  display: inline-block;
+}
+.hero h1 .underline {
+  position: relative;
+  display: inline-block;
+}
+.hero h1 .underline::after {
+  content: '';
+  position: absolute;
+  left: 2%;
+  right: 2%;
+  bottom: 6px;
+  height: 6px;
+  background: var(--amber-soft);
+  z-index: -1;
+  border-radius: 2px;
+}
+
+.hero p.lede {
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 480px;
+  margin-bottom: 36px;
+}
+
+.hero-ctas {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.hero-meta {
+  margin-top: 44px;
+  display: flex;
+  gap: 28px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.hero-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+.hero-meta-item svg { color: var(--forest); }
+
+/* hero visual — workflow demonstration */
+.hero-visual {
+  position: relative;
+  height: 520px;
+}
+
+.flow-card {
+  position: absolute;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-card);
+  font-size: 14px;
+}
+
+.flow-input {
+  top: 0;
+  left: 0;
+  width: 260px;
+  z-index: 3;
+  animation: float-a 6s ease-in-out infinite;
+}
+.flow-process {
+  top: 175px;
+  right: 0;
+  width: 280px;
+  z-index: 2;
+  animation: float-b 7s ease-in-out infinite;
+}
+.flow-output {
+  bottom: 0;
+  left: 30px;
+  width: 290px;
+  z-index: 3;
+  animation: float-a 6s ease-in-out infinite reverse;
+}
+
+.flow-label {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.flow-label-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+}
+
+.flow-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-tint);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12.5px;
+  color: var(--ink-2);
+  margin: 3px 3px 0 0;
+}
+
+.flow-process-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 6px;
+}
+.flow-step-mini {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.flow-step-num {
+  width: 20px;
+  height: 20px;
+  background: var(--forest);
+  color: #ffffff;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.flow-process .flow-label-dot { background: var(--amber); }
+.flow-input .flow-label-dot { background: var(--moss); }
+.flow-output .flow-label-dot { background: var(--forest); }
+
+/* SVG connector lines */
+.flow-connectors {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.flow-connectors path {
+  stroke: var(--line);
+  stroke-width: 1.5;
+  fill: none;
+  stroke-dasharray: 4 4;
+}
+
+@keyframes float-a {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes float-b {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+@media (max-width: 980px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 60px; }
+  .hero { padding: 50px 0 30px; }
+  .hero-visual { height: 460px; max-width: 480px; margin: 0 auto; }
+}
+
+@media (max-width: 540px) {
+  .container { padding: 0 20px; }
+  .hero-visual { height: 440px; }
+  .flow-input, .flow-process, .flow-output { width: 240px; }
+  .flow-process { right: -10px; }
+  .flow-output { left: 20px; }
+}
+
+/* ---------- GENERATOR ---------- */
+.generator {
+  padding: 40px 0;
+  width: 100%;
+}
+
+.section-head {
+  text-align: center;
+  margin-bottom: 56px;
+}
+.section-head .tag {
+  display: inline-block;
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  color: var(--amber);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.section-head h2 {
+  font-family: 'Instrument Serif', serif;
+  font-weight: 400;
+  font-size: clamp(36px, 4.2vw, 54px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+}
+.section-head h2 em { font-style: italic; color: var(--forest); }
+.section-head p {
+  color: var(--ink-2);
+  font-size: 17px;
+  max-width: 540px;
+  margin: 0 auto;
+}
+
+.generator-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  padding: 8px;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.generator-inner {
+  background: linear-gradient(180deg, #FFFFFF 0%, #ffffff 100%);
+  border-radius: 22px;
+  padding: 36px;
+}
+
+/* step indicator */
+.step-indicator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 36px;
+  flex-wrap: wrap;
+}
+.step-pip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px 8px 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--bg);
+  font-size: 13.5px;
+  color: var(--muted);
+  transition: all var(--transition);
+}
+.step-pip-num {
+  width: 22px; height: 22px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  font-family: 'Geist Mono', monospace;
+}
+.step-pip.active {
+  background: var(--forest);
+  border-color: var(--forest);
+  color: #ffffff;
+}
+.step-pip.active .step-pip-num {
+  background: #ffffff;
+  color: var(--forest);
+  border-color: transparent;
+}
+.step-pip.done {
+  background: var(--paper);
+  border-color: var(--forest);
+  color: var(--forest);
+}
+.step-pip.done .step-pip-num { background: var(--forest); color: #ffffff; border-color: transparent; }
+.step-pip-arrow { color: var(--line); }
+
+@media (max-width: 700px) {
+  .step-pip { padding: 6px 10px 6px 6px; font-size: 12.5px; }
+  .step-pip-arrow { display: none; }
+  .generator-inner { padding: 24px 18px; }
+}
+
+/* step content */
+.step-panel { display: none; animation: fadeIn 0.4s var(--transition); }
+.step-panel.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.step-h {
+  font-family: 'Instrument Serif', serif;
+  font-size: 30px;
+  letter-spacing: -0.01em;
+  margin-bottom: 6px;
+}
+.step-sub {
+  color: var(--ink-2);
+  font-size: 15px;
+  margin-bottom: 28px;
+}
+
+/* industry grid */
+.industry-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(178px, 1fr));
+  gap: 14px;
+}
+
+.industry-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 22px 18px;
+  cursor: pointer;
+  transition: all var(--transition);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+  text-align: left;
+}
+.industry-card:hover {
+  border-color: var(--forest);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-soft);
+}
+.industry-card.selected {
+  border-color: var(--forest);
+  background: linear-gradient(180deg, #f5f5f7 0%, #FFFFFF 100%);
+  box-shadow: 0 0 0 1px var(--forest), var(--shadow-soft);
+}
+.industry-card.selected::after {
+  content: '✓';
+  position: absolute;
+  top: 14px; right: 14px;
+  width: 22px; height: 22px;
+  background: var(--forest);
+  color: #ffffff;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 12px;
+}
+.industry-icon {
+  width: 40px; height: 40px;
+  background: var(--bg-tint);
+  border-radius: 12px;
+  display: grid; place-items: center;
+  color: var(--forest);
+}
+.industry-card.selected .industry-icon { background: #e5e5ea; }
+.industry-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.industry-sub {
+  font-size: 12.5px;
+  color: var(--muted);
+  margin-top: -8px;
+}
+
+/* role selector */
+.role-search {
+  position: relative;
+  margin-bottom: 18px;
+}
+.role-search-input {
+  width: 100%;
+  padding: 14px 18px 14px 46px;
+  font-size: 15px;
+  font-family: inherit;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  color: var(--ink);
+  outline: none;
+  transition: all var(--transition);
+}
+.role-search-input:focus { border-color: var(--forest); box-shadow: 0 0 0 4px rgba(31,68,56,0.08); }
+.role-search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+}
+
+.role-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+}
+.role-chip {
+  padding: 12px 16px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+  color: var(--ink-2);
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.role-chip:hover { border-color: var(--forest); color: var(--ink); }
+.role-chip.selected {
+  background: var(--forest);
+  color: #ffffff;
+  border-color: var(--forest);
+}
+.role-chip-arrow { opacity: 0.5; }
+
+/* task chips */
+.task-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.task-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.task-chip:hover { border-color: var(--forest); }
+.task-chip.selected {
+  background: var(--forest);
+  color: #ffffff;
+  border-color: var(--forest);
+}
+.task-chip-emoji { font-size: 15px; }
+
+/* step nav */
+.step-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 36px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line-soft);
+  gap: 12px;
+}
+.step-nav .summary {
+  font-size: 13px;
+  color: var(--muted);
+}
+.step-nav .summary strong { color: var(--ink); font-weight: 500; }
+
+/* step 4 — review & generate */
+.review-box {
+  background: var(--bg-tint);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 24px;
+  margin-bottom: 22px;
+}
+.review-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--line);
+  font-size: 14.5px;
+}
+.review-row:last-child { border-bottom: none; }
+.review-row .label { color: var(--muted); font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; }
+.review-row .value { color: var(--ink); font-weight: 500; text-align: right; }
+
+.generate-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 28px 0 8px;
+}
+.generate-btn {
+  font-size: 16px;
+  padding: 16px 36px;
+  background: var(--forest);
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+  transition: all var(--transition);
+  box-shadow: 0 1px 2px rgba(26,26,23,0.06), 0 16px 32px -12px rgba(31,68,56,0.4);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.generate-btn:hover { transform: translateY(-2px); }
+.generate-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+.confidence {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.confidence-meter {
+  width: 80px;
+  height: 6px;
+  background: var(--line-soft);
+  border-radius: 99px;
+  overflow: hidden;
+  position: relative;
+}
+.confidence-meter::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--moss), var(--forest));
+  width: 0%;
+  border-radius: 99px;
+  transition: width 0.6s var(--transition);
+}
+.confidence-meter.full::after { width: 92%; }
+
+/* ---------- THINKING STATE ---------- */
+.thinking {
+  display: none;
+  padding: 48px 24px;
+  text-align: center;
+}
+.thinking.active { display: block; animation: fadeIn 0.3s; }
+.thinking-orb {
+  width: 80px; height: 80px;
+  margin: 0 auto 24px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, var(--amber-soft), var(--forest), var(--moss), var(--amber), var(--amber-soft));
+  position: relative;
+  animation: spin 2s linear infinite;
+}
+.thinking-orb::after {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  background: var(--paper);
+  border-radius: 50%;
+}
+.thinking-orb-inner {
+  position: absolute;
+  inset: 0;
+  display: grid; place-items: center;
+  color: var(--forest);
+  z-index: 2;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.thinking-text {
+  font-family: 'Instrument Serif', serif;
+  font-size: 22px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.thinking-step {
+  font-size: 14px;
+  color: var(--muted);
+  height: 20px;
+}
+
+/* ---------- WORKFLOW OUTPUT ---------- */
+.workflow-output {
+  margin-top: 80px;
+  display: none;
+}
+.workflow-output.active { display: block; animation: fadeIn 0.5s; }
+
+.workflow-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 36px;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--line);
+}
+
+.workflow-header h3 {
+  font-family: 'Instrument Serif', serif;
+  font-weight: 400;
+  font-size: clamp(28px, 3.4vw, 40px);
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+.workflow-header h3 em { font-style: italic; color: var(--forest); }
+.workflow-header p { color: var(--ink-2); font-size: 15px; }
+
+.workflow-stats {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.workflow-stat {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 18px;
+  text-align: center;
+  min-width: 110px;
+}
+.workflow-stat-num {
+  font-family: 'Instrument Serif', serif;
+  font-size: 26px;
+  color: var(--forest);
+  line-height: 1;
+}
+.workflow-stat-label {
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* timeline */
+.timeline {
+  position: relative;
+  padding-left: 0;
+}
+
+.step-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 24px;
+  padding-bottom: 28px;
+}
+
+.step-card:last-child { padding-bottom: 0; }
+
+.step-rail {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.step-number {
+  width: 56px; height: 56px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 26px;
+  color: var(--forest);
+  position: relative;
+  z-index: 2;
+  box-shadow: var(--shadow-soft);
+}
+
+.step-line {
+  position: absolute;
+  top: 56px;
+  bottom: -20px;
+  left: 50%;
+  width: 1px;
+  background: linear-gradient(180deg, var(--line) 0%, var(--line) 100%);
+  background-size: 1px 8px;
+  background-image: linear-gradient(180deg, var(--line) 50%, transparent 50%);
+  background-repeat: repeat-y;
+  transform: translateX(-50%);
+}
+.step-card:last-child .step-line { display: none; }
+
+.step-body {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 24px 26px;
+  box-shadow: var(--shadow-soft);
+}
+
+.step-body-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.step-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 24px;
+  letter-spacing: -0.005em;
+  line-height: 1.2;
+}
+.step-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--amber-soft);
+  color: var(--amber);
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.step-desc {
+  color: var(--ink-2);
+  font-size: 14.5px;
+  margin-bottom: 18px;
+  line-height: 1.55;
+}
+
+.step-detail {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.step-field {
+  background: var(--bg-tint);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+.step-field-label {
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.step-field-value {
+  font-size: 14px;
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.step-prompt {
+  background: #000000;
+  border-radius: 12px;
+  padding: 14px 16px;
+  position: relative;
+  font-family: 'Geist Mono', monospace;
+  font-size: 13px;
+  color: #ffffff;
+  line-height: 1.6;
+}
+.step-prompt-label {
+  font-family: 'Geist', sans-serif;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #86868b;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.copy-btn {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #ffffff;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-family: 'Geist', sans-serif;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.copy-btn:hover { background: rgba(255,255,255,0.14); }
+.copy-btn.copied { background: var(--forest); border-color: var(--forest); }
+
+@media (max-width: 640px) {
+  .step-card { grid-template-columns: 44px 1fr; gap: 14px; }
+  .step-number { width: 44px; height: 44px; font-size: 20px; border-radius: 14px; }
+  .step-body { padding: 18px 18px; }
+  .step-detail { grid-template-columns: 1fr; }
+  .step-line { top: 44px; }
+}
+
+/* ---------- INDUSTRY EXAMPLES ---------- */
+.examples {
+  padding: 100px 0 80px;
+  background: linear-gradient(180deg, transparent 0%, var(--bg-tint) 50%, transparent 100%);
+}
+
+.examples-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.example-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 26px;
+  transition: all var(--transition);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.example-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-card);
+  border-color: var(--ink-2);
+}
+
+.example-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.example-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--muted);
+  font-family: 'Geist Mono', monospace;
+  letter-spacing: 0.04em;
+}
+.example-tag-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--forest);
+}
+
+.example-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 26px;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+.example-title em { font-style: italic; color: var(--forest); }
+
+.example-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+.ex-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--line-soft);
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+.ex-step:last-child { border-bottom: none; }
+.ex-step-num {
+  width: 20px; height: 20px;
+  background: var(--bg-tint);
+  color: var(--forest);
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 11px;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.example-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid var(--line-soft);
+}
+.example-tools {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.example-tool {
+  background: var(--bg-tint);
+  font-size: 11.5px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: var(--ink-2);
+}
+.example-saved {
+  font-size: 12.5px;
+  color: var(--forest);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* ---------- BENEFITS ---------- */
+.benefits {
+  padding: 80px 0 100px;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  background: var(--paper);
+}
+.benefit {
+  padding: 36px 30px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: background 0.3s;
+}
+.benefit:hover { background: var(--bg-tint); }
+.benefit:nth-child(3n) { border-right: none; }
+.benefit:nth-last-child(-n+3) { border-bottom: none; }
+
+.benefit-icon {
+  width: 40px; height: 40px;
+  background: var(--bg-tint);
+  border-radius: 11px;
+  display: grid; place-items: center;
+  color: var(--forest);
+}
+.benefit h4 {
+  font-family: 'Instrument Serif', serif;
+  font-weight: 400;
+  font-size: 22px;
+  letter-spacing: -0.005em;
+  line-height: 1.2;
+}
+.benefit p {
+  color: var(--ink-2);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+@media (max-width: 860px) {
+  .benefits-grid { grid-template-columns: repeat(2, 1fr); }
+  .benefit { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .benefit:nth-child(3n) { border-right: 1px solid var(--line); }
+  .benefit:nth-child(2n) { border-right: none; }
+  .benefit:nth-last-child(-n+2) { border-bottom: none; }
+  .benefit:nth-last-child(-n+3):not(:nth-last-child(-n+2)) { border-bottom: 1px solid var(--line); }
+}
+@media (max-width: 540px) {
+  .benefits-grid { grid-template-columns: 1fr; }
+  .benefit { border-right: none !important; border-bottom: 1px solid var(--line) !important; }
+  .benefit:last-child { border-bottom: none !important; }
+}
+
+/* ---------- FINAL CTA ---------- */
+.final-cta {
+  padding: 80px 0 100px;
+}
+.final-cta-card {
+  background: var(--forest);
+  border-radius: var(--r-xl);
+  padding: 80px 60px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  color: #ffffff;
+}
+.final-cta-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 100%, rgba(184,102,45,0.25) 0%, transparent 50%),
+    radial-gradient(circle at 80% 0%, rgba(245,239,216,0.08) 0%, transparent 50%);
+  pointer-events: none;
+}
+.final-cta-card > * { position: relative; z-index: 1; }
+
+.final-cta-card h2 {
+  font-family: 'Instrument Serif', serif;
+  font-weight: 400;
+  font-size: clamp(40px, 5.5vw, 68px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: 22px;
+}
+.final-cta-card h2 em { font-style: italic; color: #86868b; }
+.final-cta-card p {
+  font-size: 17px;
+  color: rgba(245,239,216,0.78);
+  max-width: 440px;
+  margin: 0 auto 32px;
+}
+.btn-cream {
+  background: #ffffff;
+  color: var(--forest);
+}
+.btn-cream:hover { background: #FFFFFF; transform: translateY(-1px); }
+
+@media (max-width: 640px) {
+  .final-cta-card { padding: 56px 28px; }
+}
+
+/* ---------- FOOTER ---------- */
+footer {
+  padding: 32px 0 40px;
+  border-top: 1px solid var(--line);
+}
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+.footer-links { display: flex; gap: 24px; }
+.footer-links a { color: var(--muted); text-decoration: none; }
+.footer-links a:hover { color: var(--ink); }
+
+/* ---------- TOAST ---------- */
+.toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--ink);
+  color: #ffffff;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-size: 14px;
+  z-index: 100;
+  opacity: 0;
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+}
+.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+/* reveal animations */
+.reveal {
+  animation: fadeIn 0.6s var(--transition) forwards;
+}
+
+</style>
 </head>
 <body>
-    <div class="background-glow">
-        <div class="glow-orb orb-1"></div>
-        <div class="glow-orb orb-2"></div>
-        <div class="glow-orb orb-3"></div>
+
+
+<!-- GENERATOR -->
+<section class="generator" id="generator">
+  <div class="container">
+    <div class="generator-card reveal">
+      <div class="generator-inner" id="generatorInner">
+        <div id="inputForm">
+          <h3 class="step-h" style="margin-bottom: 24px;">Create your AI workflow</h3>
+          <div class="input-group" style="margin-bottom: 16px;">
+            <label style="display:block; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); margin-bottom:8px;">Industry</label>
+            <input type="text" id="manualIndustry" placeholder="e.g. Marketing, Finance, Education" style="width:100%; padding:14px 18px; font-size:15px; border:1px solid var(--line); border-radius:12px; outline:none; font-family:inherit;">
+          </div>
+          <div class="input-group" style="margin-bottom: 16px;">
+            <label style="display:block; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); margin-bottom:8px;">Role</label>
+            <input type="text" id="manualRole" placeholder="e.g. Content Manager, Financial Analyst" style="width:100%; padding:14px 18px; font-size:15px; border:1px solid var(--line); border-radius:12px; outline:none; font-family:inherit;">
+          </div>
+          <div class="input-group" style="margin-bottom: 24px;">
+            <label style="display:block; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); margin-bottom:8px;">Goal</label>
+            <input type="text" id="manualGoal" placeholder="e.g. Plan a product launch, Analyze Q3 data" style="width:100%; padding:14px 18px; font-size:15px; border:1px solid var(--line); border-radius:12px; outline:none; font-family:inherit;">
+          </div>
+
+          <div class="generate-cta" id="generateCta" style="padding-top:8px;">
+            <button class="generate-btn" id="generateBtn" onclick="generateLiveWorkflow()" style="width:100%; justify-content:center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m12 2 2.5 7.5L22 12l-7.5 2.5L12 22l-2.5-7.5L2 12l7.5-2.5L12 2z"/></svg>
+              Generate my workflow
+            </button>
+          </div>
+        </div>
+
+        <div class="thinking" id="thinking">
+          <div style="position:relative;width:80px;height:80px;margin:0 auto 24px;">
+            <div class="thinking-orb"></div>
+            <div class="thinking-orb-inner">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+            </div>
+          </div>
+          <div class="thinking-text">Building your workflow…</div>
+          <div class="thinking-step" id="thinkingStep">Connecting to AI</div>
+        </div>
+
+
+      </div>
     </div>
 
-    <nav class="navbar">
-        <div class="container nav-content">
-            <div class="logo">
-                <div class="logo-icon"><i data-lucide="sparkles"></i></div>
-                <span class="logo-text">FlowAI</span>
-            </div>
+    <!-- Generated workflow output -->
+    <div class="workflow-output" id="workflowOutput">
+      <div class="workflow-header">
+        <div>
+          <h3 id="wfTitle">Your <em>workflow</em></h3>
+          <p id="wfSubtitle">Built for your role · 5 steps · est. time saved 4h 30m</p>
         </div>
-    </nav>
+        <div class="workflow-stats">
+          <div class="workflow-stat">
+            <div class="workflow-stat-num" id="wfSteps">5</div>
+            <div class="workflow-stat-label">Steps</div>
+          </div>
+          <div class="workflow-stat">
+            <div class="workflow-stat-num" id="wfTime">4h 30m</div>
+            <div class="workflow-stat-label">Saved</div>
+          </div>
+          <div class="workflow-stat">
+            <div class="workflow-stat-num" id="wfTools">3</div>
+            <div class="workflow-stat-label">AI Tools</div>
+          </div>
+        </div>
+      </div>
+      <div class="timeline" id="timeline"></div>
+    </div>
 
-    <main class="container main-content">
-        <header class="hero">
-            <div class="badge">✨ Live AI Workflow Generation</div>
-            <h1 class="hero-title">Automate Your Work <br><span class="text-gradient">In Seconds</span></h1>
-            <p class="hero-subtitle">Tell us what you do. Our AI will build a step-by-step workflow with the exact prompts and tools you need.</p>
-        </header>
+  </div>
+</section>
 
-        <section class="generator-card">
-            <div class="generator-form" id="workflow-form">
-                <div class="input-group">
-                    <label for="industry"><i data-lucide="building"></i> Your Industry</label>
-                    <input type="text" id="industry" placeholder="e.g. Digital Marketing, Education, Logistics" autocomplete="off">
-                </div>
-                
-                <div class="input-group">
-                    <label for="role"><i data-lucide="user"></i> Your Role</label>
-                    <input type="text" id="role" placeholder="e.g. SEO Specialist, Teacher, Operations Manager" autocomplete="off">
-                </div>
 
-                <div class="input-group full-width">
-                    <label for="goal"><i data-lucide="target"></i> Your Daily Goal or Task</label>
-                    <input type="text" id="goal" placeholder="e.g. Write a monthly newsletter, Plan a 45-min lesson, Route optimization" autocomplete="off">
-                </div>
 
-                <button class="btn btn-primary btn-generate full-width" id="generate-btn">
-                    <span>Generate AI Workflow</span>
-                    <i data-lucide="wand-2"></i>
-                </button>
+<div class="toast" id="toast">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>
+  <span id="toastText">Prompt copied to clipboard</span>
+</div>
+
+<script>
+// ============================================
+// DATA
+// ============================================
+const industries = [
+  { id: 'uiux', name: 'UI/UX Design', sub: 'Product, web, mobile', icon: 'M3 3h7v7H3V3zm11 0h7v7h-7V3zm0 11h7v7h-7v-7zM3 14h7v7H3v-7z' },
+  { id: 'hr', name: 'HR', sub: 'People & talent', icon: 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75' },
+  { id: 'finance', name: 'Finance', sub: 'Books, FP&A, audit', icon: 'M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' },
+  { id: 'logistics', name: 'Logistics', sub: 'Supply chain, ops', icon: 'M1 3h15v13H1zM16 8h4l3 3v5h-7V8zM5.5 21a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM18.5 21a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z' },
+  { id: 'arch', name: 'Architecture', sub: 'Interior design too', icon: 'M3 21h18M3 7l9-4 9 4M5 21V11M19 21V11M9 21v-6h6v6' },
+  { id: 'marketing', name: 'Marketing', sub: 'Brand, growth', icon: 'M3 11a2 2 0 0 1 2-2h3l5-4v18l-5-4H5a2 2 0 0 1-2-2v-6zM19 12a4 4 0 0 0-2-3.46M19 12a4 4 0 0 1-2 3.46' },
+  { id: 'sales', name: 'Sales', sub: 'B2B, B2C, BD', icon: 'M22 12h-4l-3 9L9 3l-3 9H2' },
+  { id: 'ops', name: 'Operations', sub: 'Process & admin', icon: 'M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM12 6v6l4 2' },
+  { id: 'support', name: 'Customer Support', sub: 'CX, success', icon: 'M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z' },
+  { id: 'content', name: 'Content Creation', sub: 'Writers, creators', icon: 'M12 19l7-7 3 3-7 7-3-3zM18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5zM2 2l7.586 7.586M11 11a2 2 0 1 0 0-4 2 2 0 0 0 0 4z' },
+  { id: 'education', name: 'Education', sub: 'Teachers, trainers', icon: 'M22 10v6M2 10l10-5 10 5-10 5z M6 12v5c3 3 9 3 12 0v-5' },
+  { id: 'bd', name: 'Business Dev', sub: 'Partnerships, growth', icon: 'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M10 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM19 8v6M22 11h-6' },
+];
+
+const rolesByIndustry = {
+  uiux: ['Product Designer', 'UX Researcher', 'UI Designer', 'Design Lead', 'Web Designer', 'Interaction Designer'],
+  hr: ['Recruiter', 'HR Generalist', 'Talent Acquisition Lead', 'People Ops Manager', 'L&D Specialist', 'HR Business Partner'],
+  finance: ['Financial Analyst', 'Accountant', 'FP&A Manager', 'Controller', 'Bookkeeper', 'Treasury Analyst'],
+  logistics: ['Supply Chain Analyst', 'Warehouse Manager', 'Logistics Coordinator', 'Fleet Manager', 'Procurement Lead'],
+  arch: ['Architect', 'Interior Designer', 'Project Architect', 'Landscape Designer', 'Drafting Specialist'],
+  marketing: ['Brand Manager', 'Growth Marketer', 'SEO Specialist', 'Performance Marketer', 'Marketing Manager', 'Social Media Manager'],
+  sales: ['Account Executive', 'Sales Development Rep', 'Sales Manager', 'Inside Sales', 'Field Sales'],
+  ops: ['Operations Manager', 'Project Manager', 'Office Manager', 'Process Analyst', 'Admin Coordinator'],
+  support: ['Support Specialist', 'Customer Success Manager', 'Support Lead', 'Help Desk Agent', 'Onboarding Specialist'],
+  content: ['Content Writer', 'Copywriter', 'YouTube Creator', 'Newsletter Writer', 'Technical Writer', 'Editor'],
+  education: ['School Teacher', 'College Professor', 'Online Educator', 'Coaching Instructor', 'Corporate Trainer', 'Tutor'],
+  bd: ['Business Development Manager', 'Partnerships Lead', 'BD Representative', 'Strategy Analyst'],
+};
+
+const tasksByIndustry = {
+  uiux: [{e:'🔍',t:'Conduct user research'}, {e:'🧩',t:'Build a design system'}, {e:'📐',t:'Audit a product'}, {e:'✍️',t:'Write microcopy'}, {e:'🎨',t:'Generate mood boards'}],
+  hr: [{e:'📋',t:'Write a job description'}, {e:'📝',t:'Screen resumes'}, {e:'💬',t:'Draft interview questions'}, {e:'📊',t:'Run engagement surveys'}, {e:'🎯',t:'Plan onboarding'}],
+  finance: [{e:'📈',t:'Build a financial report'}, {e:'🔮',t:'Forecast next quarter'}, {e:'🧾',t:'Reconcile transactions'}, {e:'💼',t:'Prepare board deck'}, {e:'📊',t:'Analyze variance'}],
+  logistics: [{e:'🚚',t:'Optimize routing'}, {e:'📦',t:'Track inventory'}, {e:'📋',t:'Vendor comparison'}, {e:'📊',t:'Build ops dashboard'}, {e:'📝',t:'Draft SOPs'}],
+  arch: [{e:'🏠',t:'Generate mood boards'}, {e:'📐',t:'Write a design brief'}, {e:'💬',t:'Client presentation'}, {e:'🔍',t:'Material research'}, {e:'📊',t:'Cost estimation'}],
+  marketing: [{e:'🚀',t:'Plan a product launch'}, {e:'📱',t:'Create social content'}, {e:'📧',t:'Write email campaigns'}, {e:'🔍',t:'SEO research'}, {e:'📊',t:'Analyze a campaign'}],
+  sales: [{e:'🎯',t:'Generate leads'}, {e:'📧',t:'Write outreach emails'}, {e:'💬',t:'Prepare for a call'}, {e:'📊',t:'Build a sales report'}, {e:'🤝',t:'Handle objections'}],
+  ops: [{e:'📋',t:'Document a process'}, {e:'📊',t:'Build a status report'}, {e:'📝',t:'Meeting notes & actions'}, {e:'🎯',t:'Plan a project'}, {e:'🔍',t:'Vendor research'}],
+  support: [{e:'💬',t:'Draft a response'}, {e:'📚',t:'Write help docs'}, {e:'📊',t:'Analyze tickets'}, {e:'🎯',t:'Improve CSAT'}, {e:'🤖',t:'Set up auto-replies'}],
+  content: [{e:'✍️',t:'Write a blog post'}, {e:'📱',t:'Plan social content'}, {e:'🎬',t:'Script a video'}, {e:'📧',t:'Write a newsletter'}, {e:'🔍',t:'Research a topic'}],
+  education: [{e:'📚',t:'Plan a lesson'}, {e:'❓',t:'Create a quiz'}, {e:'📝',t:'Generate worksheets'}, {e:'🎨',t:'Build a presentation'}, {e:'💬',t:'Write student feedback'}],
+  bd: [{e:'🔍',t:'Research prospects'}, {e:'📧',t:'Partnership outreach'}, {e:'📊',t:'Market analysis'}, {e:'🤝',t:'Prepare for meetings'}, {e:'📋',t:'Draft a proposal'}],
+};
+
+// Sample workflows — built per industry-task combo. Falls back to a default template.
+function buildWorkflow(industry, role, task) {
+  const i = industry.id;
+  const t = task.t;
+
+  // Education + lesson plan
+  if (i === 'education' && t.includes('lesson')) {
+    return {
+      title: 'Plan a lesson with AI',
+      steps: [
+        { title: 'Define learning outcomes', desc: 'Get clear, measurable outcomes for the lesson before drafting anything.', tool: 'ChatGPT', output: '3–5 learning outcomes', time: '20 min', prompt: 'I\'m a ' + role + '. Draft 3–5 measurable learning outcomes for a 45-minute lesson on [TOPIC] for [GRADE LEVEL] students. Use Bloom\'s taxonomy verbs.' },
+        { title: 'Build the lesson plan', desc: 'Turn outcomes into a structured plan with timing.', tool: 'MagicSchool AI', output: 'Full lesson plan with timing', time: '1 hr', prompt: 'Create a 45-minute lesson plan for [TOPIC]. Include: hook (5min), direct instruction (15min), guided practice (15min), independent work (10min). Match these outcomes: [PASTE OUTCOMES].' },
+        { title: 'Generate worksheets & quiz', desc: 'Make practice material aligned to the lesson.', tool: 'Quizizz AI', output: '1 worksheet + 10-question quiz', time: '45 min', prompt: 'Generate a worksheet with 8 practice problems and a 10-question multiple-choice quiz for the lesson on [TOPIC]. Mix difficulty levels. Include answer key with brief explanations.' },
+        { title: 'Build the slide deck', desc: 'Turn your plan into a clean teaching deck.', tool: 'Gamma', output: '8–10 slide deck', time: '30 min', prompt: 'Create a 10-slide presentation for teaching [TOPIC]. Include a hook slide, key concepts, examples, a "your turn" activity slide, and a recap. Visual, not text-heavy.' },
+        { title: 'Plan differentiation', desc: 'Adapt the lesson for different learner levels.', tool: 'ChatGPT', output: 'Adaptations for 3 learner levels', time: '25 min', prompt: 'For this lesson on [TOPIC], give me adaptations for: (1) students who are struggling, (2) on-level students, (3) advanced learners. One paragraph each with concrete activity changes.' },
+      ]
+    };
+  }
+
+  // Sales / BD lead gen
+  if ((i === 'sales' || i === 'bd') && (t.includes('lead') || t.includes('outreach') || t.includes('prospect'))) {
+    return {
+      title: 'Lead generation, end to end',
+      steps: [
+        { title: 'Define your ideal customer', desc: 'Build a precise ICP before searching for leads.', tool: 'ChatGPT', output: 'ICP document', time: '30 min', prompt: 'I\'m a ' + role + ' selling [PRODUCT/SERVICE]. Help me define an Ideal Customer Profile: industry, company size, role of buyer, key pain points, and disqualifiers. Give it as a short checklist.' },
+        { title: 'Find target accounts', desc: 'Generate a list of companies matching your ICP.', tool: 'ChatGPT + LinkedIn', output: '20–30 target companies', time: '2 hrs', prompt: 'Using my ICP [PASTE ICP], suggest 20 companies in [REGION] that likely match. For each, give: company name, why they fit, the likely buyer\'s role, and a hook I can use to start a conversation.' },
+        { title: 'Personalize outreach emails', desc: 'Write 3 short, distinct email variants per prospect.', tool: 'ChatGPT', output: '3 email variants per prospect', time: '45 min', prompt: 'Write 3 cold email variants (under 80 words each) for [PROSPECT NAME at COMPANY]. Variant A: pain-point led. Variant B: insight-led. Variant C: question-led. End each with one specific call to action.' },
+        { title: 'Build a follow-up sequence', desc: 'Plan the next 3 touches so you don\'t lose the thread.', tool: 'ChatGPT', output: '3-step follow-up cadence', time: '20 min', prompt: 'Build a 3-touch follow-up sequence for prospects who don\'t reply to my first email. Touch 1 at day 4, touch 2 at day 9 (with a useful resource), touch 3 at day 16 (a polite break-up email). Keep each under 70 words.' },
+        { title: 'Track & analyze replies', desc: 'Spot patterns and improve every week.', tool: 'Notion AI', output: 'Weekly pipeline summary', time: '15 min/week', prompt: 'Here are my outreach results this week: [PASTE DATA]. Summarize: response rate, which variant performed best, recurring objections, and 3 specific things to try differently next week.' },
+      ]
+    };
+  }
+
+  // Marketing launch
+  if (i === 'marketing' && (t.includes('launch') || t.includes('campaign'))) {
+    return {
+      title: 'Plan a product launch',
+      steps: [
+        { title: 'Audience & positioning', desc: 'Get clear on who you\'re talking to and why they care.', tool: 'ChatGPT', output: 'Audience + positioning doc', time: '1 hr', prompt: 'I\'m launching [PRODUCT]. Define the primary audience (demographics, jobs-to-be-done, objections) and draft 3 positioning statements with different angles. Pick the strongest one and explain why.' },
+        { title: 'Messaging framework', desc: 'Lock the headline, value props, and proof points.', tool: 'ChatGPT', output: 'Messaging house', time: '1 hr', prompt: 'Build a messaging framework for [PRODUCT]: one core promise, 3 supporting value props, 3 proof points each, and 5 headline options. Use plain language. No buzzwords.' },
+        { title: 'Content calendar', desc: 'Plan a 2-week run-up with daily touchpoints.', tool: 'ChatGPT + Notion AI', output: '14-day calendar', time: '1.5 hrs', prompt: 'Build a 14-day pre-launch content calendar for [PRODUCT] across LinkedIn, Twitter/X, and email. Mix teasers, behind-the-scenes, value content, and direct CTAs. Specify the angle and asset type per day.' },
+        { title: 'Launch day assets', desc: 'Draft everything you\'ll publish on day one.', tool: 'ChatGPT + Canva', output: 'Email, 3 social posts, landing copy', time: '2 hrs', prompt: 'Draft launch day assets for [PRODUCT]: 1 announcement email (under 200 words), 3 social posts (LinkedIn, X, Instagram), and landing page copy (hero, 3 value props, FAQ, CTA). Use the messaging framework above.' },
+        { title: 'Post-launch report', desc: 'Capture results and decide what\'s next.', tool: 'ChatGPT', output: 'Launch retrospective', time: '45 min', prompt: 'Here are my launch numbers: [PASTE DATA]. Write a one-page retrospective covering: what worked, what didn\'t, top surprise, and 3 things to do differently for the next launch.' },
+      ]
+    };
+  }
+
+  // HR — JD or screening
+  if (i === 'hr' && (t.includes('job') || t.includes('screen') || t.includes('resume'))) {
+    return {
+      title: 'Hire faster, end to end',
+      steps: [
+        { title: 'Write a clear job description', desc: 'Attract the right candidates, repel the wrong ones.', tool: 'ChatGPT', output: 'Job description draft', time: '40 min', prompt: 'I\'m hiring a [ROLE] at a [COMPANY TYPE]. Draft a job description with: a 2-sentence company hook, 5 outcomes the person will deliver (not tasks), must-have and nice-to-have skills, and salary range placeholder. Conversational tone.' },
+        { title: 'Screen resumes', desc: 'Filter a stack quickly without missing good people.', tool: 'ChatGPT', output: 'Scored shortlist', time: '1.5 hrs', prompt: 'Score these resumes against the JD on a 1–10 scale for: relevant experience, evidence of outcomes, and red flags. Give a 2-sentence rationale per candidate and a final recommendation: interview, maybe, or pass. Resumes: [PASTE].' },
+        { title: 'Draft interview questions', desc: 'Move past generic questions and get signal.', tool: 'ChatGPT', output: '12 structured questions', time: '30 min', prompt: 'For a ' + role + ' hiring a [ROLE], draft 12 structured interview questions: 4 behavioral, 4 role-specific, 4 values-fit. For each, include what a strong answer looks like and what a weak one sounds like.' },
+        { title: 'Plan the onboarding', desc: 'First 30 days, mapped out clearly.', tool: 'Notion AI', output: '30-day onboarding plan', time: '1 hr', prompt: 'Build a 30-day onboarding plan for the new [ROLE]. Week-by-week: people to meet, things to read, small wins to deliver, and a 30-day check-in agenda. Make it specific, not generic.' },
+        { title: 'Feedback to candidates', desc: 'Close the loop kindly, even with rejections.', tool: 'ChatGPT', output: 'Rejection & offer email templates', time: '20 min', prompt: 'Write 2 candidate emails: (1) a warm rejection that gives one piece of specific, useful feedback, (2) an offer email that sets the right tone and asks them to call back with questions. Both should sound human, not corporate.' },
+      ]
+    };
+  }
+
+  // Content writing
+  if (i === 'content' && (t.includes('blog') || t.includes('write'))) {
+    return {
+      title: 'Write a blog post that\'s actually read',
+      steps: [
+        { title: 'Pick the right angle', desc: 'Most posts fail because the angle is too generic.', tool: 'ChatGPT', output: '5 angle options', time: '20 min', prompt: 'My topic is [TOPIC] for a ' + role + ' audience. Give me 5 sharp angles, each with a distinct reader takeaway. For each, write the headline and the one-line hook that would make me click.' },
+        { title: 'Outline the post', desc: 'A tight outline saves hours of editing later.', tool: 'ChatGPT', output: 'Section-by-section outline', time: '30 min', prompt: 'Outline the post using the chosen angle. Hook (one paragraph), 4–5 H2 sections with key points under each, and a sharp conclusion. Mark anywhere I\'ll need an example or data point.' },
+        { title: 'Draft the first version', desc: 'Get a fast, complete draft before polishing.', tool: 'ChatGPT', output: '900–1,200 word draft', time: '1.5 hrs', prompt: 'Write a 900–1,200 word draft from this outline: [PASTE]. Use short paragraphs, plain language, and concrete examples. No hedging language ("might", "could possibly"). Voice: confident but warm.' },
+        { title: 'Polish & cut', desc: 'Editing makes the difference between good and great.', tool: 'ChatGPT', output: 'Polished final draft', time: '45 min', prompt: 'Here\'s my draft: [PASTE]. Cut 15% of the words. Sharpen the opening. Replace any generic claims with concrete ones. Flag 2 places where I should add a real example. Don\'t change the voice.' },
+        { title: 'Package it', desc: 'A great post still needs a great wrapper.', tool: 'ChatGPT + Canva', output: 'Title, meta, social posts, cover image brief', time: '30 min', prompt: 'For this post: [PASTE]. Give me: 3 title variants (SEO + curiosity blend), a 155-char meta description, 1 LinkedIn post and 1 tweet promoting it, and a one-paragraph brief for a cover image.' },
+      ]
+    };
+  }
+
+  // Finance reports
+  if (i === 'finance') {
+    return {
+      title: 'Build a finance report leaders read',
+      steps: [
+        { title: 'Define what decision this report drives', desc: 'A report without a decision is a document.', tool: 'ChatGPT', output: 'Report brief', time: '20 min', prompt: 'I\'m building a [REPORT TYPE]. Help me define: who reads this, what decision they need to make from it, the 3 most important numbers, and the one thing they should walk away knowing. Short answers.' },
+        { title: 'Clean & analyze the data', desc: 'Spot the story before you start writing.', tool: 'ChatGPT (Code Interpreter)', output: 'Variance summary + chart', time: '1.5 hrs', prompt: 'Here\'s my data: [PASTE/UPLOAD]. Compute: month-over-month variance, top 3 drivers of change, anomalies worth flagging. Give me a clean variance table and one chart that tells the story.' },
+        { title: 'Write the executive summary', desc: 'If they only read 5 lines, what should they know?', tool: 'ChatGPT', output: '5-bullet exec summary', time: '30 min', prompt: 'Write a 5-bullet executive summary of this analysis: [PASTE]. Each bullet under 25 words. Lead with the headline number. End with the one recommendation I should make.' },
+        { title: 'Build the deck', desc: 'Visual-first, one idea per slide.', tool: 'Gamma + Excel', output: '8–10 slide finance deck', time: '1 hr', prompt: 'Turn this analysis into an 8-slide deck for [AUDIENCE]: title, exec summary, headline KPI, MoM trend, top 3 drivers, risks, recommendation, next steps. One idea per slide. Plain language, not jargon.' },
+        { title: 'Prep for hard questions', desc: 'Anticipate the pushback before the meeting.', tool: 'ChatGPT', output: 'Q&A prep doc', time: '25 min', prompt: 'Given this analysis [PASTE], what are the 8 toughest questions a CFO might ask? Draft a 2-sentence answer for each. Flag any question where I should pull supporting data in advance.' },
+      ]
+    };
+  }
+
+  // Default fallback — works for any combo
+  return {
+    title: `Use AI for: ${task.t.toLowerCase()}`,
+    steps: [
+      { title: 'Set the context', desc: 'Tell AI exactly who you are and what success looks like.', tool: 'ChatGPT', output: 'Context briefing', time: '15 min', prompt: 'I\'m a ' + role + ' working in ' + industry.name + '. Today I need to ' + task.t.toLowerCase() + '. My goal is [GOAL]. My constraints are [CONSTRAINTS]. Help me think through this clearly in 5 short bullets.' },
+      { title: 'Research', desc: 'Get a clear picture before doing the work.', tool: 'ChatGPT + Google Gemini', output: 'Research notes', time: '45 min', prompt: 'Research [SPECIFIC AREA] for me. Give me: the 3 most important facts, common pitfalls people miss, and 2 examples of how others have done this well. Keep each section short.' },
+      { title: 'Draft the work', desc: 'Generate a first version fast, then refine.', tool: 'ChatGPT', output: 'First draft', time: '1 hr', prompt: 'Based on the context and research above, draft [SPECIFIC DELIVERABLE]. Use plain language. Be specific. Avoid generic advice. Aim for [LENGTH/FORMAT].' },
+      { title: 'Review & refine', desc: 'A second pass with AI catches what you missed.', tool: 'ChatGPT', output: 'Polished version', time: '30 min', prompt: 'Here\'s my draft: [PASTE]. Give me 3 sharp improvements I should make, 2 things to cut, and 1 thing I\'m missing entirely. Be direct.' },
+      { title: 'Ship & learn', desc: 'Document what worked so next time is faster.', tool: 'Notion AI', output: 'Mini playbook for next time', time: '15 min', prompt: 'Turn this finished workflow into a one-page playbook I can re-use: the key prompts that worked, the steps in order, and 3 things I\'d do differently. Save me time when I do this again.' },
+    ]
+  };
+}
+
+// Pre-built examples
+const exampleWorkflows = [
+  { industry: 'Logistics', tag: 'logistics', title: 'Route a delivery fleet smarter', steps: ['ICP for route audits', 'Pull data', 'Propose 3 new routes', 'Estimate savings', 'Brief the driver team'], tools: ['ChatGPT', 'Notion AI'], saved: '6 hrs / week' },
+  { industry: 'HR', tag: 'hr', title: 'Screen 50 resumes in an hour', steps: ['Define must-haves', 'Score each resume', 'Flag standouts', 'Generate interview questions', 'Send candidate updates'], tools: ['ChatGPT', 'MagicSchool'], saved: '4 hrs' },
+  { industry: 'Education', tag: 'education', title: 'Plan a week of lessons', steps: ['Outcomes per day', 'Lesson plan', 'Worksheets', 'Quiz', 'Differentiation'], tools: ['ChatGPT', 'Gamma', 'Quizizz'], saved: '3 hrs 30 min' },
+  { industry: 'Digital Marketing', tag: 'marketing', title: 'Run a 2-week launch campaign', steps: ['Positioning', 'Messaging framework', 'Content calendar', 'Launch assets', 'Retrospective'], tools: ['ChatGPT', 'Canva', 'Notion'], saved: '8 hrs' },
+  { industry: 'Content', tag: 'content', title: 'Write a blog post worth reading', steps: ['Pick the angle', 'Outline', 'First draft', 'Polish', 'Package'], tools: ['ChatGPT', 'Grammarly'], saved: '3 hrs' },
+  { industry: 'UI/UX', tag: 'uiux', title: 'Audit a product in a day', steps: ['Define audit lens', 'Walk the flow', 'Surface friction', 'Prioritize fixes', 'Brief the team'], tools: ['ChatGPT', 'Figma AI'], saved: '5 hrs' },
+];
+
+const benefits = [
+  { icon: 'M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83', title: 'Beginner-friendly', desc: 'No technical skills needed. If you can read and click, you can build a workflow.' },
+  { icon: 'M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2', title: 'Ready-to-copy prompts', desc: 'Every step gives you the exact prompt to paste — not vague suggestions.' },
+  { icon: 'M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM12 6v6l4 2', title: 'Saves real hours', desc: 'Each workflow tells you exactly how much time you should expect to save.' },
+  { icon: 'M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z', title: 'Tools you already know', desc: 'We recommend mainstream tools — ChatGPT, Canva, Notion — not 50 obscure SaaS.' },
+  { icon: 'M22 11.08V12a10 10 0 1 1-5.93-9.14M22 4 12 14.01l-3-3', title: 'Built for your role', desc: 'Not a generic template. Tailored to your industry, your job, your task.' },
+  { icon: 'M3 3h7v7H3V3zm11 0h7v7h-7V3zm0 11h7v7h-7v-7zM3 14h7v7H3v-7z', title: 'Step-by-step guidance', desc: 'No walls of text. Just a clear timeline you can follow from the first step.' },
+];
+
+// ============================================
+// LIVE GENERATION API
+// ============================================
+
+async function generateLiveWorkflow() {
+  const industry = document.getElementById("manualIndustry").value.trim();
+  const role = document.getElementById("manualRole").value.trim();
+  const goal = document.getElementById("manualGoal").value.trim();
+
+  if (!industry || !role || !goal) {
+    alert("Please fill in all fields (Industry, Role, Goal).");
+    return;
+  }
+
+  document.getElementById("inputForm").style.display = "none";
+  const thinking = document.getElementById("thinking");
+  thinking.classList.add("active");
+  thinking.style.display = "block";
+
+  const steps = [
+    "Connecting to AI…",
+    "Analyzing your role…",
+    "Matching the best AI tools…",
+    "Drafting actionable prompts…",
+    "Finalizing workflow…"
+  ];
+  let i = 0;
+  const ti = setInterval(() => {
+    i++;
+    if (i < steps.length) {
+      document.getElementById("thinkingStep").textContent = steps[i];
+    }
+  }, 1200);
+
+  try {
+    const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ industry, role, goal })
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to call backend API");
+    }
+
+    const data = await response.json();
+    const wf = data.result;
+
+    clearInterval(ti);
+    thinking.style.display = "none";
+    thinking.classList.remove("active");
+    
+    renderLiveWorkflow(wf, role);
+    document.getElementById("workflowOutput").classList.add("active");
+    setTimeout(() => {
+      document.getElementById("workflowOutput").scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 200);
+
+  } catch (error) {
+    clearInterval(ti);
+    alert("Error generating workflow. Make sure the Vercel API is running and configured.");
+    console.error(error);
+    thinking.style.display = "none";
+    thinking.classList.remove("active");
+    document.getElementById("inputForm").style.display = "block";
+  }
+}
+
+function renderLiveWorkflow(wf, roleText) {
+  document.getElementById("wfTitle").innerHTML = wf.title ? wf.title.replace(/workflow/i, "<em>workflow</em>") : "Your <em>workflow</em>";
+  
+  // total time
+  let totalMin = 0;
+  if (wf.steps) {
+    totalMin = wf.steps.reduce((acc, s) => {
+      if (!s.time) return acc;
+      const m = s.time.match(/(\d+)\s*hr/i);
+      const min = s.time.match(/(\d+)\s*min/i);
+      let total = 0;
+      if (m) total += parseInt(m[1]) * 60;
+      if (min) total += parseInt(min[1]);
+      if (s.time.match(/1\.5\s*hr/i)) total = 90;
+      return acc + total;
+    }, 0);
+  }
+  
+  const h = Math.floor(totalMin / 60);
+  const m = totalMin % 60;
+  const timeStr = totalMin > 0 ? `${h}h ${m}m` : "1h 30m";
+  
+  const tools = new Set();
+  if (wf.steps) {
+    wf.steps.forEach(s => {
+        if (s.tool) s.tool.split(/\+|,/).forEach(t => tools.add(t.trim()));
+    });
+  }
+
+  document.getElementById("wfSubtitle").textContent = `Built for ${roleText} · ${wf.steps ? wf.steps.length : 0} steps · est. ${timeStr} saved`;
+  document.getElementById("wfSteps").textContent = wf.steps ? wf.steps.length : 0;
+  document.getElementById("wfTime").textContent = timeStr;
+  document.getElementById("wfTools").textContent = tools.size || 2;
+
+  if (wf.steps) {
+    document.getElementById("timeline").innerHTML = wf.steps.map((s, idx) => `
+      <div class="step-card">
+        <div class="step-rail">
+          <div class="step-number">${idx + 1}</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-body">
+          <div class="step-body-head">
+            <h4 class="step-title">${s.title}</h4>
+            <span class="step-time">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Saves ${s.time || "15 min"}
+            </span>
+          </div>
+          <p class="step-desc">${s.desc}</p>
+          <div class="step-detail">
+            <div class="step-field">
+              <div class="step-field-label">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                AI Tool
+              </div>
+              <div class="step-field-value">${s.tool || "AI Assistant"}</div>
             </div>
-
-            <!-- Loading State -->
-            <div class="loading-state hidden" id="loading-state">
-                <div class="ai-scanner"></div>
-                <h3>Analyzing your goal...</h3>
-                <p>Generating custom prompts and selecting the best AI tools.</p>
-                <div class="progress-bar-container">
-                    <div class="progress-bar"></div>
-                </div>
+            <div class="step-field">
+              <div class="step-field-label">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>
+                Expected output
+              </div>
+              <div class="step-field-value">${s.output || "Generated result"}</div>
             </div>
-        </section>
-
-        <!-- Result Section -->
-        <section class="result-section hidden" id="result-section">
-            <div class="result-header">
-                <h2>Your Custom AI Workflow</h2>
-                <button class="btn btn-secondary" id="reset-btn"><i data-lucide="rotate-ccw"></i> Start Over</button>
+          </div>
+          <div class="step-prompt">
+            <div class="step-prompt-label">
+              <span>Ready-to-copy prompt</span>
+              <button class="copy-btn" onclick="copyPrompt(this, ${idx})">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copy
+              </button>
             </div>
-            <div class="workflow-content" id="workflow-content">
-                <!-- Content injected via JS -->
-            </div>
-        </section>
-    </main>
+            <div id="prompt-${idx}">${s.prompt}</div>
+          </div>
+        </div>
+      </div>
+    `).join("");
+  }
+}
 
-    <script src="app.js"></script>
-    <script>
-        lucide.createIcons();
-    </script>
+function copyPrompt(btn, idx) {
+  const text = document.getElementById("prompt-" + idx).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.classList.add("copied");
+    btn.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> Copied`;
+    showToast("Prompt copied to clipboard");
+    setTimeout(() => {
+      btn.classList.remove("copied");
+      btn.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy`;
+    }, 2000);
+  });
+}
+
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  document.getElementById("toastText").textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+</script>
+
 </body>
 </html>

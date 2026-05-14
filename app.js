@@ -21,7 +21,11 @@ function init() {
 
 function setupEventListeners() {
     // Generate
-    elements.generateBtn.addEventListener('click', handleGenerate);
+    elements.generateBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log("Generate button clicked!");
+        handleGenerate();
+    });
     
     // Reset
     elements.resetBtn.addEventListener('click', resetForm);
@@ -33,10 +37,13 @@ async function handleGenerate() {
     const goal = elements.goalInput.value.trim();
 
     if (!industry || !role || !goal) {
+        console.log("Validation failed: missing fields");
         alert("Please fill in all fields (Industry, Role, Goal).");
         return;
     }
 
+    console.log("Fields filled. Hiding form, showing loader...");
+    
     // UI Updates
     elements.form.style.display = 'none';
     elements.loadingState.classList.remove('hidden');
@@ -66,6 +73,7 @@ async function handleGenerate() {
         }, 500);
 
     } catch (error) {
+        console.error("API Call Error:", error);
         alert("Error generating workflow: " + error.message);
         elements.loadingState.classList.add('hidden');
         elements.form.style.display = 'grid';
