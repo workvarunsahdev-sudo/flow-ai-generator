@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowAI - Premium AI Workflow Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Marked.js for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div class="background-glow">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="container nav-content">
+            <div class="logo">
+                <div class="logo-icon"><i data-lucide="sparkles"></i></div>
+                <span class="logo-text">FlowAI</span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container main-content">
+        <header class="hero">
+            <div class="badge">✨ Live AI Workflow Generation</div>
+            <h1 class="hero-title">Automate Your Work <br><span class="text-gradient">In Seconds</span></h1>
+            <p class="hero-subtitle">Tell us what you do. Our AI will build a step-by-step workflow with the exact prompts and tools you need.</p>
+        </header>
+
+        <section class="generator-card">
+            <div class="generator-form" id="workflow-form">
+                <div class="input-group">
+                    <label for="industry"><i data-lucide="building"></i> Your Industry</label>
+                    <input type="text" id="industry" placeholder="e.g. Digital Marketing, Education, Logistics" autocomplete="off">
+                </div>
+                
+                <div class="input-group">
+                    <label for="role"><i data-lucide="user"></i> Your Role</label>
+                    <input type="text" id="role" placeholder="e.g. SEO Specialist, Teacher, Operations Manager" autocomplete="off">
+                </div>
+
+                <div class="input-group full-width">
+                    <label for="goal"><i data-lucide="target"></i> Your Daily Goal or Task</label>
+                    <input type="text" id="goal" placeholder="e.g. Write a monthly newsletter, Plan a 45-min lesson, Route optimization" autocomplete="off">
+                </div>
+
+                <button class="btn btn-primary btn-generate full-width" id="generate-btn">
+                    <span>Generate AI Workflow</span>
+                    <i data-lucide="wand-2"></i>
+                </button>
+            </div>
+
+            <!-- Loading State -->
+            <div class="loading-state hidden" id="loading-state">
+                <div class="ai-scanner"></div>
+                <h3>Analyzing your goal...</h3>
+                <p>Generating custom prompts and selecting the best AI tools.</p>
+                <div class="progress-bar-container">
+                    <div class="progress-bar"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Result Section -->
+        <section class="result-section hidden" id="result-section">
+            <div class="result-header">
+                <h2>Your Custom AI Workflow</h2>
+                <button class="btn btn-secondary" id="reset-btn"><i data-lucide="rotate-ccw"></i> Start Over</button>
+            </div>
+            <div class="workflow-content" id="workflow-content">
+                <!-- Content injected via JS -->
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
