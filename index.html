@@ -1566,14 +1566,19 @@ async function generateLiveWorkflow() {
   }, 1200);
 
   try {
-    const response = await fetch("/api/generate", {
+    const response = await fetch('https://flowai-001-git-main-varun-sahdevs-projects.vercel.app/api/generate', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ industry, role, goal })
     });
 
     if (!response.ok) {
-        throw new Error("Failed to call backend API");
+        let errMsg = "Failed to call backend API";
+        try {
+            const errData = await response.json();
+            if (errData.error) errMsg = errData.error;
+        } catch(e) {}
+        throw new Error(errMsg);
     }
 
     const data = await response.json();
@@ -1591,7 +1596,7 @@ async function generateLiveWorkflow() {
 
   } catch (error) {
     clearInterval(ti);
-    alert("Error generating workflow. Make sure the Vercel API is running and configured.");
+    alert("Error generating workflow: " + error.message);
     console.error(error);
     thinking.style.display = "none";
     thinking.classList.remove("active");
